@@ -15,14 +15,14 @@
 
 from importlib.metadata import entry_points
 
-from neon_inference_plugin_locale import AmbientContextStep
+from brainforge_inference_plugin_locale import AmbientContextStep
 
 def test_entry_point_loads_locale_step():
     matches = [
         ep for ep in entry_points(group="brainforge.inference.request_steps")
-        if ep.name == "neon.locale"
+        if ep.name == "brainforge.locale"
     ]
     assert len(matches) == 1
     loaded = matches[0].load()
     assert loaded is AmbientContextStep
-    assert loaded.id == "neon.locale"
+    assert loaded.id == "brainforge.locale"

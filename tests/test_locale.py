@@ -17,7 +17,7 @@ import json
 import unittest
 from unittest.mock import AsyncMock, patch
 
-from neon_inference_plugin_locale import AmbientContextStep
+from brainforge_inference_plugin_locale import AmbientContextStep
 from brainforge_inference_utils.transaction import UserTransaction
 from helpers import make_request
 
@@ -72,7 +72,7 @@ class TestAmbientContextStep(unittest.IsolatedAsyncioTestCase):
             ("llm", "hey"),
         ])
         self.assertEqual(
-            transaction.request_step_context["neon.locale"]["location"],
+            transaction.request_step_context["brainforge.locale"]["location"],
             "Seattle, WA, USA",
         )
 
@@ -155,7 +155,7 @@ class TestAmbientContextStep(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(transaction.request.history, original_history)
         self.assertEqual(
-            transaction.request_step_context["neon.locale"],
+            transaction.request_step_context["brainforge.locale"],
             {"location": "Denver, CO, USA", "error": "timed out"},
         )
 

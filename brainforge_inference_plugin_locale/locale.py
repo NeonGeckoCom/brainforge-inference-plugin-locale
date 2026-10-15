@@ -53,7 +53,7 @@ class AmbientContextStep(RequestStep):
     - `client_ip`: Client IP used to resolve location via ip-api.com.
     """
 
-    id = "neon.locale"
+    id = "brainforge.locale"
     request_context_options = (
         RequestContextOption(
             "location",
