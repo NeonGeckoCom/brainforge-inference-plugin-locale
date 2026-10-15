@@ -15,7 +15,7 @@
 
 from importlib.metadata import entry_points
 
-from brainforge_inference_plugin_locale import AmbientContextStep
+from brainforge_inference_plugin_locale import LocaleStep
 
 def test_entry_point_loads_locale_step():
     matches = [
@@ -24,5 +24,5 @@ def test_entry_point_loads_locale_step():
     ]
     assert len(matches) == 1
     loaded = matches[0].load()
-    assert loaded is AmbientContextStep
+    assert loaded is LocaleStep
     assert loaded.id == "brainforge.locale"

@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-Inject ambient time and weather context as `information` messages.
+Inject locale context (current time and weather) as `information` messages.
 
 Mirrors the time/weather injection in `brainforge-webapp`: resolve the user's
 location (from `transaction.request_context` or step config), call MCP tools,
@@ -37,7 +37,7 @@ from brainforge_inference_utils.transaction import UserTransaction
 LOG = logging.getLogger(__name__)
 
 
-class AmbientContextStep(RequestStep):
+class LocaleStep(RequestStep):
     """
     Prepend time and weather `information` messages to `request.history`.
 
@@ -88,7 +88,7 @@ class AmbientContextStep(RequestStep):
             time_str, weather_str = await self._fetch_time_and_weather(
                 mcp_url, location, timeout=timeout)
         except Exception as exc:
-            LOG.warning("Skipping ambient context for %r: %s", location, exc)
+            LOG.warning("Skipping locale context for %r: %s", location, exc)
             step_context["error"] = str(exc)
             transaction.request_step_context[self.id] = step_context
             return

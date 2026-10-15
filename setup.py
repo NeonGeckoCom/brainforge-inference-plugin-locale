@@ -87,7 +87,7 @@ setup(
     ],
     entry_points={
         "brainforge.inference.request_steps": [
-            "brainforge.locale = brainforge_inference_plugin_locale:AmbientContextStep",
+            "brainforge.locale = brainforge_inference_plugin_locale:LocaleStep",
         ],
     },
 )

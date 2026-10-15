@@ -7,7 +7,7 @@ Entry point group: `brainforge.inference.request_steps`
 
 | Step id | Class |
 | --- | --- |
-| `brainforge.locale` | `AmbientContextStep` |
+| `brainforge.locale` | `LocaleStep` |
 
 ```yaml
 pipeline:

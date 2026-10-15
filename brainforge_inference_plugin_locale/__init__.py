@@ -15,7 +15,7 @@
 
 """Locale request step for BrainForge inference pipelines."""
 
-from brainforge_inference_plugin_locale.locale import AmbientContextStep
+from brainforge_inference_plugin_locale.locale import LocaleStep
 from brainforge_inference_plugin_locale.version import __version__
 
-__all__ = ["AmbientContextStep", "__version__"]
+__all__ = ["LocaleStep", "__version__"]
