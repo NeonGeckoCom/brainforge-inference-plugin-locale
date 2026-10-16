@@ -17,7 +17,7 @@ import json
 import unittest
 from unittest.mock import AsyncMock, patch
 
-from neon_inference_plugin_locale import AmbientContextStep
+from brainforge_inference_plugin_locale import LocaleStep
 from brainforge_inference_utils.transaction import UserTransaction
 from helpers import make_request
 
@@ -36,16 +36,16 @@ class TestFormatWeatherPayload(unittest.TestCase):
             "hourly": list(range(30)),
             "daily": list(range(10)),
         }
-        formatted = AmbientContextStep._format_weather_payload(payload)
+        formatted = LocaleStep._format_weather_payload(payload)
         trimmed = json.loads(formatted)
         self.assertNotIn("minutely", trimmed)
         self.assertEqual(len(trimmed["hourly"]), 24)
         self.assertEqual(len(trimmed["daily"]), 4)
 
 
-class TestAmbientContextStep(unittest.IsolatedAsyncioTestCase):
+class TestLocaleStep(unittest.IsolatedAsyncioTestCase):
     async def test_prepends_information_to_request_history(self):
-        step = AmbientContextStep(STEP_CONFIG)
+        step = LocaleStep(STEP_CONFIG)
         transaction = UserTransaction(
             request=make_request(history=[("user", "hi"), ("llm", "hey")]),
             request_context={"location": "Seattle, WA, USA"},
@@ -72,12 +72,12 @@ class TestAmbientContextStep(unittest.IsolatedAsyncioTestCase):
             ("llm", "hey"),
         ])
         self.assertEqual(
-            transaction.request_step_context["neon.locale"]["location"],
+            transaction.request_step_context["brainforge.locale"]["location"],
             "Seattle, WA, USA",
         )
 
     async def test_resolves_location_from_client_ip(self):
-        step = AmbientContextStep(STEP_CONFIG)
+        step = LocaleStep(STEP_CONFIG)
         transaction = UserTransaction(
             request=make_request(),
             request_context={"client_ip": "203.0.113.10"},
@@ -100,7 +100,7 @@ class TestAmbientContextStep(unittest.IsolatedAsyncioTestCase):
             STEP_CONFIG["mcp_url"], "Portland, OR, USA", timeout=5.0)
 
     async def test_uses_default_location_when_request_context_empty(self):
-        step = AmbientContextStep(STEP_CONFIG)
+        step = LocaleStep(STEP_CONFIG)
         transaction = UserTransaction(request=make_request())
 
         with patch.object(
@@ -122,7 +122,7 @@ class TestAmbientContextStep(unittest.IsolatedAsyncioTestCase):
             "mcp_url": "https://mcp.example.com/mcp",
             "timeout": 2.5,
         }
-        step = AmbientContextStep(config)
+        step = LocaleStep(config)
         transaction = UserTransaction(
             request=make_request(),
             request_context={"location": "Austin, TX, USA"},
@@ -139,7 +139,7 @@ class TestAmbientContextStep(unittest.IsolatedAsyncioTestCase):
             "https://mcp.example.com/mcp", "Austin, TX, USA", timeout=2.5)
 
     async def test_mcp_failure_leaves_history_unchanged(self):
-        step = AmbientContextStep(STEP_CONFIG)
+        step = LocaleStep(STEP_CONFIG)
         original_history = [("user", "hi"), ("llm", "hey")]
         transaction = UserTransaction(
             request=make_request(history=list(original_history)),
@@ -155,12 +155,12 @@ class TestAmbientContextStep(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(transaction.request.history, original_history)
         self.assertEqual(
-            transaction.request_step_context["neon.locale"],
+            transaction.request_step_context["brainforge.locale"],
             {"location": "Denver, CO, USA", "error": "timed out"},
         )
 
     async def test_prefers_request_context_location_over_client_ip(self):
-        step = AmbientContextStep(STEP_CONFIG)
+        step = LocaleStep(STEP_CONFIG)
         transaction = UserTransaction(
             request=make_request(),
             request_context={
@@ -184,7 +184,7 @@ class TestAmbientContextStep(unittest.IsolatedAsyncioTestCase):
             STEP_CONFIG["mcp_url"], "Chicago, IL, USA", timeout=5.0)
 
     def test_skips_when_timeout_missing(self):
-        step = AmbientContextStep({
+        step = LocaleStep({
             "mcp_url": "http://localhost:8000/mcp",
             "default_location": "Renton, WA, USA",
             "timeout": "",
@@ -193,7 +193,7 @@ class TestAmbientContextStep(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(reason, "timeout not configured")
 
     def test_uses_default_location_from_step_config(self):
-        step = AmbientContextStep({"mcp_url": "http://localhost:8000/mcp"})
+        step = LocaleStep({"mcp_url": "http://localhost:8000/mcp"})
         transaction = UserTransaction(request=make_request())
         self.assertEqual(
             step._resolve_location(transaction),
@@ -201,7 +201,7 @@ class TestAmbientContextStep(unittest.IsolatedAsyncioTestCase):
         )
 
     async def test_supported_request_context_is_unconstrained(self):
-        step = AmbientContextStep(STEP_CONFIG)
+        step = LocaleStep(STEP_CONFIG)
         options = await step.supported_request_context()
         self.assertEqual([option.key for option in options], ["location", "client_ip"])
         self.assertTrue(all(option.values is None for option in options))

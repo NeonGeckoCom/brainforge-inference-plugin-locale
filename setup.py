@@ -52,7 +52,7 @@ with open(path.join(BASE_PATH, "README.md"), "r") as f:
     long_description = f.read()
 
 with open(
-    path.join(BASE_PATH, "neon_inference_plugin_locale", "version.py"),
+    path.join(BASE_PATH, "brainforge_inference_plugin_locale", "version.py"),
     "r",
     encoding="utf-8",
 ) as v:
@@ -65,12 +65,12 @@ with open(
 
 
 setup(
-    name="neon-inference-plugin-locale",
+    name="brainforge-inference-plugin-locale",
     version=version,
     description="Locale request step for BrainForge inference pipelines",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/NeonGeckoCom/neon-inference-plugin-locale",
+    url="https://github.com/NeonGeckoCom/brainforge-inference-plugin-locale",
     author="NeonGecko",
     author_email="developers@neon.ai",
     license="AGPL-3.0-only",
@@ -87,7 +87,7 @@ setup(
     ],
     entry_points={
         "brainforge.inference.request_steps": [
-            "neon.locale = neon_inference_plugin_locale:AmbientContextStep",
+            "brainforge.locale = brainforge_inference_plugin_locale:LocaleStep",
         ],
     },
 )
